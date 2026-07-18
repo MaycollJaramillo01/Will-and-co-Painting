@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/projects/residential-exterior.jpg",
-        width: 1200,
-        height: 900,
+        width: 1600,
+        height: 2000,
         alt: "Residential exterior painting by Wil & Co. Painting",
       },
     ],

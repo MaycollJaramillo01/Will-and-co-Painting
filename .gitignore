@@ -25,3 +25,5 @@ pnpm-debug.log*
 # raw source assets and scratch files (too large for the repo)
 /Assets/
 /tmp/
+
+.vercel

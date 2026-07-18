@@ -39,7 +39,8 @@ export const services = [
     description:
       "A well-planned exterior paint project starts with the condition of the surface and ends with consistent coverage. We help Madison area homeowners refresh exterior surfaces with a clean, cohesive finish.",
     image: "/images/projects/residential-exterior.jpg",
-    imageAlt: "Blue painted home exterior with white trim and front porch",
+    imageAlt:
+      "White painted brick home exterior with black shutters and decorative gable trim",
     category: "Residential",
     scope: ["Siding", "Trim and accents", "Exterior refreshes"],
   },
@@ -199,7 +200,7 @@ export const projects: readonly Project[] = [
     title: "Residential Exterior",
     category: "Exterior Painting",
     image: "/images/projects/residential-exterior.jpg",
-    alt: "Blue residential exterior with crisp white trim",
+    alt: "White brick residential exterior with black shutters and freshly painted trim",
     aspect: "landscape",
   },
   {
