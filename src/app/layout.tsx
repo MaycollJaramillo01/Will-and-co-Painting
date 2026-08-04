@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
+import { GoogleAdsTag } from "@/components/google-ads-tag";
 import { LocalBusinessSchema } from "@/components/local-business-schema";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${manrope.variable} ${barlowCondensed.variable}`}
     >
       <body>
+        <GoogleAdsTag />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
