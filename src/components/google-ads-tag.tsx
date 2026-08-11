@@ -1,5 +1,3 @@
-import Script from "next/script";
-
 const googleAdsId = "AW-17537368439";
 const callConversionLabel =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_CALL_CONVERSION_LABEL?.trim() ?? "";
@@ -9,23 +7,28 @@ export function GoogleAdsTag() {
     ? `${googleAdsId}/${callConversionLabel}`
     : "";
 
+  // ponytail: plain <script> instead of next/script so the tag ships in the
+  // server-rendered HTML — Google Ads' landing page crawler flags pages as
+  // "not tagged" when gtag is only injected client-side after hydration.
   return (
     <>
-      <Script
-        id="google-ads-library"
+      <script
+        async
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
-        strategy="afterInteractive"
       />
-      <Script id="google-ads-config" strategy="afterInteractive">
-        {`
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
           window.dataLayer = window.dataLayer || [];
           window.gtag = window.gtag || function gtag(){window.dataLayer.push(arguments);};
           window.gtag('js', new Date());
           window.gtag('config', '${googleAdsId}');
-        `}
-      </Script>
-      <Script id="google-ads-call-tracking" strategy="afterInteractive">
-        {`
+        `,
+        }}
+      />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
           document.addEventListener('click', function (event) {
             var target = event.target;
             if (!(target instanceof Element)) return;
@@ -51,8 +54,9 @@ export function GoogleAdsTag() {
               transport_type: 'beacon'
             });
           });
-        `}
-      </Script>
+        `,
+        }}
+      />
     </>
   );
 }

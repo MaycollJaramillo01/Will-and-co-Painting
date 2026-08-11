@@ -68,8 +68,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en-US"
       className={`${manrope.variable} ${barlowCondensed.variable}`}
     >
-      <body>
+      <head>
         <GoogleAdsTag />
+      </head>
+      <body>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
