@@ -1,6 +1,9 @@
 const googleAdsId = "AW-17537368439";
+// Google Ads "Clic de llamada" conversion label. Not a secret — gtag exposes it
+// in client HTML anyway. Env var overrides it if the action ever changes.
 const callConversionLabel =
-  process.env.NEXT_PUBLIC_GOOGLE_ADS_CALL_CONVERSION_LABEL?.trim() ?? "";
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_CALL_CONVERSION_LABEL?.trim() ||
+  "gZOeCM2KlOccEPeCvKpB";
 
 export function GoogleAdsTag() {
   const callConversionDestination = callConversionLabel
@@ -42,6 +45,8 @@ export function GoogleAdsTag() {
             if (conversionDestination) {
               window.gtag('event', 'conversion', {
                 send_to: conversionDestination,
+                value: 1.0,
+                currency: 'USD',
                 phone_number: phoneNumber.replace(/^tel:/, ''),
                 transport_type: 'beacon'
               });
