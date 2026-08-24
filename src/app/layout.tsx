@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
+import { CallBubble } from "@/components/call-bubble";
 import { GoogleAdsTag } from "@/components/google-ads-tag";
 import { LocalBusinessSchema } from "@/components/local-business-schema";
 import { SiteFooter } from "@/components/site-footer";
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteHeader />
         {children}
         <SiteFooter />
+        <CallBubble />
         <WhatsAppBubble />
       </body>
     </html>

@@ -9,8 +9,8 @@ export const business = {
   businessName: "Wil & Co. Painting",
   legalName: "", // TODO: Confirm the registered legal business name.
   ownerName: "Wil Barahona",
-  phone: "", // TODO: Confirm the public business phone number.
-  displayPhone: "", // TODO: Confirm the formatted public phone number.
+  phone: "+16083326263", // E.164 for tel: links and schema telephone.
+  displayPhone: "+1 (608) 332-6263",
   email: "", // TODO: Confirm the public business email address.
   streetAddress: "", // Service Area Business: do not add a private home address.
   city: "Madison",

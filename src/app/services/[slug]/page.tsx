@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { QuoteBand } from "@/components/quote-band";
-import { business, siteUrl } from "@/config/business";
+import { business, hasPublicPhone, siteUrl } from "@/config/business";
 import { getServiceBySlug, services } from "@/content/en";
 import { getServiceSeo } from "@/content/service-seo";
 
@@ -176,10 +176,18 @@ export default async function ServicePage({
               {service.name}
             </h1>
             <p className="body-copy mt-7">{service.shortDescription}</p>
-            <Link className="button-primary mt-8" href="/contact">
-              Request a Quote
-              <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
-            </Link>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link className="button-primary" href="/contact">
+                Request a Quote
+                <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
+              </Link>
+              {hasPublicPhone && (
+                <a className="button-secondary" href={`tel:${business.phone}`}>
+                  <Phone aria-hidden="true" size={17} strokeWidth={2} />
+                  {business.displayPhone}
+                </a>
+              )}
+            </div>
           </div>
           <div className="hero-image-enter relative h-[29rem] overflow-hidden rounded-xl md:h-[38rem]">
             <Image

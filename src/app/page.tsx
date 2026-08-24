@@ -8,13 +8,14 @@ import {
   MapPin,
   PaintRoller,
   PanelsTopLeft,
+  Phone,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroVideo } from "@/components/hero-video";
 import { ProjectGrid } from "@/components/project-grid";
 import { QuoteBand } from "@/components/quote-band";
-import { business } from "@/config/business";
+import { business, hasPublicPhone } from "@/config/business";
 import { getServiceBySlug, serviceGroups } from "@/content/en";
 
 export const metadata: Metadata = {
@@ -49,6 +50,15 @@ export default function HomePage() {
                 Request a Quote
                 <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
               </Link>
+              {hasPublicPhone && (
+                <a
+                  className="button-secondary !border-white/45 !text-white hover:!border-white"
+                  href={`tel:${business.phone}`}
+                >
+                  <Phone aria-hidden="true" size={17} strokeWidth={2} />
+                  {business.displayPhone}
+                </a>
+              )}
               <Link
                 className="button-secondary !border-white/45 !text-white hover:!border-white"
                 href="/projects"
