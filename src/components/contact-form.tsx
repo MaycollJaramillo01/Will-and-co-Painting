@@ -50,7 +50,7 @@ export function ContactForm() {
     setSubmitState({
       status: "ready",
       message:
-        "Your message is ready. Tap Send in your messaging app to deliver it.",
+        "Your request is ready. Open WhatsApp and tap Send to deliver it.",
     });
   }
 
@@ -75,9 +75,11 @@ export function ContactForm() {
         <div className="mt-7 flex flex-wrap gap-3">
           <a
             className="button-primary"
-            href={`sms:${business.phone}?body=${encodeURIComponent(textRequest)}`}
+            href={`https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(textRequest)}`}
+            target="_blank"
+            rel="noreferrer"
           >
-            Open text message
+            Send with WhatsApp
           </a>
           <a className="button-secondary" href={`tel:${business.phone}`}>
             Call {business.displayPhone}
