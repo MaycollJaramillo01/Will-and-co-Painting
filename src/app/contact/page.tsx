@@ -34,8 +34,8 @@ export default function ContactPage() {
               Request a Quote
             </h2>
             <p className="mt-3 mb-8 max-w-xl text-sm leading-7 text-[color:var(--muted)]">
-              Fields marked by the browser as required must be completed before
-              the request can be sent.
+              Complete all fields except phone, which is optional, and confirm
+              that we may contact you about your project.
             </p>
             <ContactForm />
           </div>

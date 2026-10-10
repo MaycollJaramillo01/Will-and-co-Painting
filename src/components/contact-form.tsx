@@ -5,12 +5,10 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { services } from "@/content/en";
+import { business } from "@/config/business";
 import { contactSchema, type ContactFormData } from "@/lib/contact-schema";
 
-type SubmitState =
-  | { status: "idle" }
-  | { status: "success"; message: string }
-  | { status: "error"; message: string };
+type SubmitState = { status: "idle" } | { status: "ready"; message: string };
 
 const fieldClass =
   "min-h-12 w-full rounded-lg border border-[color:var(--line)] bg-[color:var(--background)] px-4 text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:border-[color:var(--accent)] focus:outline-none";
@@ -19,6 +17,7 @@ export function ContactForm() {
   const [submitState, setSubmitState] = useState<SubmitState>({
     status: "idle",
   });
+  const [textRequest, setTextRequest] = useState("");
   const {
     register,
     handleSubmit,
@@ -38,41 +37,24 @@ export function ContactForm() {
     },
   });
 
-  async function onSubmit(data: ContactFormData) {
-    setSubmitState({ status: "idle" });
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      const result = (await response.json()) as { message?: string };
-
-      if (!response.ok) {
-        throw new Error(
-          result.message ?? "We could not send your request. Please try again.",
-        );
-      }
-
-      setSubmitState({
-        status: "success",
-        message:
-          result.message ?? "Your request has been sent. We will be in touch.",
-      });
-      reset();
-    } catch (error) {
-      setSubmitState({
-        status: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "We could not send your request. Please try again.",
-      });
-    }
+  function onSubmit(data: ContactFormData) {
+    const request = [
+      `Quote request: ${data.service}`,
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone || "Not provided"}`,
+      `Property type: ${data.propertyType}`,
+      data.message,
+    ].join("\n");
+    setTextRequest(request);
+    setSubmitState({
+      status: "ready",
+      message:
+        "Your message is ready. Tap Send in your messaging app to deliver it.",
+    });
   }
 
-  if (submitState.status === "success") {
+  if (submitState.status === "ready") {
     return (
       <div
         className="hairline flex min-h-[28rem] flex-col items-start justify-center rounded-xl border bg-[color:var(--background)] p-8"
@@ -90,12 +72,26 @@ export function ContactForm() {
         <p className="mt-3 max-w-md leading-7 text-[color:var(--muted)]">
           {submitState.message}
         </p>
+        <div className="mt-7 flex flex-wrap gap-3">
+          <a
+            className="button-primary"
+            href={`sms:${business.phone}?body=${encodeURIComponent(textRequest)}`}
+          >
+            Open text message
+          </a>
+          <a className="button-secondary" href={`tel:${business.phone}`}>
+            Call {business.displayPhone}
+          </a>
+        </div>
         <button
           type="button"
-          className="button-secondary mt-7"
-          onClick={() => setSubmitState({ status: "idle" })}
+          className="button-secondary mt-4"
+          onClick={() => {
+            setSubmitState({ status: "idle" });
+            reset();
+          }}
         >
-          Send another request
+          Start another request
         </button>
       </div>
     );
@@ -238,15 +234,6 @@ export function ContactForm() {
           </p>
         )}
       </div>
-
-      {submitState.status === "error" && (
-        <p
-          className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm font-bold text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
-          role="alert"
-        >
-          {submitState.message}
-        </p>
-      )}
 
       <button
         className="button-primary w-full sm:w-fit"
