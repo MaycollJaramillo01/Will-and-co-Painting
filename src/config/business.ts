@@ -12,7 +12,7 @@ export const business = {
   phone: "+16083326263", // E.164 for tel: links and schema telephone.
   displayPhone: "+1 (608) 332-6263",
   email: "", // TODO: Confirm the public business email address.
-  quoteRequestEmail: "wilandcopaiting@gmail.com", // Inbox the quote form emails through FormSubmit. Not shown on the site.
+  quoteRequestEmail: "wilandcopainting@gmail.com", // Inbox the quote form emails through FormSubmit. Not shown on the site.
   quoteRequestCc: "info@cluster.marketing", // Temporary copy while the form is being tested. Set to "" to stop.
   streetAddress: "", // Service Area Business: do not add a private home address.
   city: "Madison",
