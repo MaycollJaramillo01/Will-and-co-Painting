@@ -21,7 +21,9 @@ export const contactSchema = z.object({
   consent: z.boolean().refine((value) => value, {
     message: "Confirm that we may contact you about this request.",
   }),
-  website: z.string().max(0).optional(),
+  // Honeypot. Not rejected here: a validation error on a hidden field would
+  // leave the button dead with no visible message. The form checks it instead.
+  website: z.string().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;

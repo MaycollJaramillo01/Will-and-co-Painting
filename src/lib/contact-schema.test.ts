@@ -46,10 +46,10 @@ test("rejects a short project description", () => {
   );
 });
 
-test("rejects a filled honeypot field", () => {
+test("lets a filled honeypot through so the form can handle it", () => {
   assert.equal(
     contactSchema.safeParse({ ...validRequest, website: "bot-site.test" })
       .success,
-    false,
+    true,
   );
 });

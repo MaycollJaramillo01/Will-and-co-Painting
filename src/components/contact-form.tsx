@@ -8,7 +8,8 @@ import { services } from "@/content/en";
 import { business } from "@/config/business";
 import { contactSchema, type ContactFormData } from "@/lib/contact-schema";
 
-type SubmitState = { status: "idle" } | { status: "ready"; message: string };
+// "handoff" = it could not be emailed, so the visitor sends it themselves.
+type SubmitState = { status: "idle" | "sent" | "handoff" };
 
 const fieldClass =
   "min-h-12 w-full rounded-lg border border-[color:var(--line)] bg-[color:var(--background)] px-4 text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:border-[color:var(--accent)] focus:outline-none";
@@ -37,50 +38,85 @@ export function ContactForm() {
     },
   });
 
-  function onSubmit(data: ContactFormData) {
-    const request = [
-      `Quote request: ${data.service}`,
-      `Name: ${data.name}`,
-      `Email: ${data.email}`,
-      `Phone: ${data.phone || "Not provided"}`,
-      `Property type: ${data.propertyType}`,
-      data.message,
-    ].join("\n");
-    setTextRequest(request);
-    setSubmitState({
-      status: "ready",
-      message:
-        "Your request is ready. Open WhatsApp and tap Send to deliver it.",
-    });
+  async function onSubmit(data: ContactFormData) {
+    setTextRequest(
+      [
+        `Quote request: ${data.service}`,
+        `Name: ${data.name}`,
+        `Email: ${data.email}`,
+        `Phone: ${data.phone || "Not provided"}`,
+        `Property type: ${data.propertyType}`,
+        data.message,
+      ].join("\n"),
+    );
+    // ponytail: FormSubmit emails the request with no backend or API key. The
+    // inbox must click FormSubmit's one-time "Activate Form" email first.
+    // A filled honeypot is never emailed; a real visitor still gets the handoff.
+    const sent =
+      Boolean(business.quoteRequestEmail) &&
+      !data.website &&
+      (await fetch(`https://formsubmit.co/ajax/${business.quoteRequestEmail}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone || "Not provided",
+          propertyType: data.propertyType,
+          service: data.service,
+          message: data.message,
+          _subject: `Quote request: ${data.service}`,
+          _cc: business.quoteRequestCc || undefined,
+          _template: "table",
+          _captcha: "false",
+        }),
+      })
+        .then((response) => response.json())
+        .then(
+          // FormSubmit answers 200 with success "false" until it is activated.
+          (result) => String(result.success) === "true",
+          () => false,
+        ));
+    setSubmitState({ status: sent ? "sent" : "handoff" });
   }
 
-  if (submitState.status === "ready") {
+  if (submitState.status !== "idle") {
+    const sent = submitState.status === "sent";
     return (
       <div
         className="hairline flex min-h-[28rem] flex-col items-start justify-center rounded-xl border bg-[color:var(--background)] p-8"
         role="status"
       >
-        <CheckCircle2
-          aria-hidden="true"
-          className="text-[color:var(--accent)]"
-          size={40}
-          strokeWidth={1.8}
-        />
+        {sent && (
+          <CheckCircle2
+            aria-hidden="true"
+            className="text-[color:var(--accent)]"
+            size={40}
+            strokeWidth={1.8}
+          />
+        )}
         <h2 className="font-display mt-5 text-4xl font-bold">
-          Request received.
+          {sent ? "Request sent." : "One more step."}
         </h2>
         <p className="mt-3 max-w-md leading-7 text-[color:var(--muted)]">
-          {submitState.message}
+          {sent
+            ? "Thank you. We have your request and will be in touch."
+            : "We could not send your request automatically. Send it with WhatsApp or call us so it reaches us."}
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
-          <a
-            className="button-primary"
-            href={`https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(textRequest)}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Send with WhatsApp
-          </a>
+          {!sent && (
+            <a
+              className="button-primary"
+              href={`https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(textRequest)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Send with WhatsApp
+            </a>
+          )}
           <a className="button-secondary" href={`tel:${business.phone}`}>
             Call {business.displayPhone}
           </a>
