@@ -22,7 +22,7 @@ export const contactSchema = z.object({
     message: "Confirm that we may contact you about this request.",
   }),
   // Honeypot. Not rejected here: a validation error on a hidden field would
-  // leave the button dead with no visible message. The form checks it instead.
+  // leave the button dead with no visible message. The server checks it instead.
   website: z.string().optional(),
 });
 

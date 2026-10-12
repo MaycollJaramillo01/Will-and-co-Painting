@@ -49,37 +49,19 @@ export function ContactForm() {
         data.message,
       ].join("\n"),
     );
-    // ponytail: FormSubmit emails the request with no backend or API key. The
-    // inbox must click FormSubmit's one-time "Activate Form" email first.
-    // A filled honeypot is never emailed; a real visitor still gets the handoff.
-    const sent =
-      Boolean(business.quoteRequestEmail) &&
-      !data.website &&
-      (await fetch(`https://formsubmit.co/ajax/${business.quoteRequestEmail}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          phone: data.phone || "Not provided",
-          propertyType: data.propertyType,
-          service: data.service,
-          message: data.message,
-          _subject: `Quote request: ${data.service}`,
-          _cc: business.quoteRequestCc || undefined,
-          _template: "table",
-          _captcha: "false",
-        }),
-      })
-        .then((response) => response.json())
-        .then(
-          // FormSubmit answers 200 with success "false" until it is activated.
-          (result) => String(result.success) === "true",
-          () => false,
-        ));
+    const sent = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(
+        async (response) =>
+          response.ok && (await response.json()).success === true,
+      )
+      .catch(() => false);
     setSubmitState({ status: sent ? "sent" : "handoff" });
   }
 

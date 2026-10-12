@@ -1,0 +1,9 @@
+.git/
+.claude/
+.next/
+node_modules/
+Assets/
+tmp/
+.env*
+!.env.example
+*.tsbuildinfo
