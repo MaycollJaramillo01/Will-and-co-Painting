@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { services } from "@/content/en";
 import { business } from "@/config/business";
+import { quoteFormConversion } from "@/components/google-ads-tag";
 import { contactSchema, type ContactFormData } from "@/lib/contact-schema";
 
 // "handoff" = it could not be emailed, so the visitor sends it themselves.
@@ -62,6 +63,15 @@ export function ContactForm() {
           response.ok && (await response.json()).success === true,
       )
       .catch(() => false);
+    // Google Ads "Formulario de cotizacion": only requests that reached the
+    // inbox, never the honeypot (the API fakes success for it).
+    if (sent && !data.website) {
+      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.(
+        "event",
+        "conversion",
+        { send_to: quoteFormConversion },
+      );
+    }
     setSubmitState({ status: sent ? "sent" : "handoff" });
   }
 
