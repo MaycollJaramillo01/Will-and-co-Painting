@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { services } from "@/content/en";
@@ -252,7 +253,23 @@ export function ContactForm() {
             {...register("consent")}
           />
           <span>
-            I agree that Wil & Co. Painting may contact me about this request.
+            I agree to the{" "}
+            <Link
+              href="/terms"
+              target="_blank"
+              className="font-bold text-[color:var(--accent)] underline"
+            >
+              Terms &amp; Conditions
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              className="font-bold text-[color:var(--accent)] underline"
+            >
+              Privacy Policy
+            </Link>
+            , and that Wil & Co. Painting may contact me about this request.
           </span>
         </label>
         {errors.consent?.message && (

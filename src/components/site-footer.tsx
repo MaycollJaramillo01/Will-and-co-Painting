@@ -115,6 +115,14 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {business.businessName}. All rights
             reserved.
           </p>
+          <nav className="flex gap-5" aria-label="Legal">
+            <Link className="hover:text-white" href="/privacy-policy">
+              Privacy Policy
+            </Link>
+            <Link className="hover:text-white" href="/terms">
+              Terms &amp; Conditions
+            </Link>
+          </nav>
           <p>Service Area Business based in Madison, Wisconsin.</p>
         </div>
       </div>

@@ -19,7 +19,8 @@ export const contactSchema = z.object({
     .min(10, "Tell us a little more about the project.")
     .max(2000, "Keep the project details under 2,000 characters."),
   consent: z.boolean().refine((value) => value, {
-    message: "Confirm that we may contact you about this request.",
+    message:
+      "Accept the Terms & Conditions and Privacy Policy so we can contact you about this request.",
   }),
   // Honeypot. Not rejected here: a validation error on a hidden field would
   // leave the button dead with no visible message. The server checks it instead.

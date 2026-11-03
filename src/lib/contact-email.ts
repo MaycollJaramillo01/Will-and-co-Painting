@@ -41,7 +41,7 @@ export function renderContactEmail(
     timeZoneName: "short",
   }).format(receivedAt);
   const consent = data.consent
-    ? "Yes — permission to contact the client."
+    ? "Yes — accepted the Terms & Conditions and Privacy Policy and gave permission to contact them."
     : "Not given.";
   const message = escapeHtml(data.message).replace(/\r?\n/g, "<br />");
 
