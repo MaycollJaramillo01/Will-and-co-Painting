@@ -1,5 +1,10 @@
 import type { ContactFormData } from "./contact-schema.ts";
 import { siteUrl } from "../config/business.ts";
+import {
+  aiCallConsentText,
+  contactConsentVersion,
+  smsConsentText,
+} from "./contact-consent.ts";
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => {
@@ -41,8 +46,35 @@ export function renderContactEmail(
     timeZoneName: "short",
   }).format(receivedAt);
   const consent = data.consent
-    ? "Yes — accepted the Terms & Conditions and Privacy Policy and gave permission to contact them."
+    ? "Yes — accepted the Terms & Conditions and acknowledged the Privacy Policy; email or manually placed calls about this request only."
     : "Not given.";
+  const smsConsent = data.smsConsent
+    ? "Granted"
+    : "Not given — do not send automated texts";
+  const aiCallConsent = data.aiCallConsent
+    ? "Granted"
+    : "Not given — do not make automated or AI voice calls";
+  const consentDetails = [
+    `Automated SMS consent: ${smsConsent}`,
+    `Automated / AI voice call consent: ${aiCallConsent}`,
+    `Authorized phone number: ${data.phone || "Not provided"}`,
+    `Consent disclosure version: ${data.consentVersion || "Not supplied; no automated communication consent recorded"}`,
+    `Submission recorded at: ${receivedAt.toISOString()}`,
+    `Terms: ${siteUrl}/terms`,
+    `Privacy Policy: ${siteUrl}/privacy-policy`,
+    ...(data.consentVersion === contactConsentVersion
+      ? [
+          `SMS disclosure shown: ${smsConsentText}`,
+          `Automated / AI voice call disclosure shown: ${aiCallConsentText}`,
+        ]
+      : []),
+  ];
+  const consentHtml = consentDetails
+    .map(
+      (detail) =>
+        `<p style="margin:0 0 6px;font-size:12px;line-height:20px;color:#536577;">${escapeHtml(detail)}</p>`,
+    )
+    .join("");
   const message = escapeHtml(data.message).replace(/\r?\n/g, "<br />");
 
   const html = `<!DOCTYPE html>
@@ -134,6 +166,7 @@ export function renderContactEmail(
         <tr><td class="inset" style="padding:23px 36px;background-color:#f5f7f9;border-top:1px solid #cdd6df;">
           <p style="margin:0 0 6px;font-size:12px;line-height:20px;color:#536577;"><strong>Received:</strong> ${received} (Madison time)</p>
           <p style="margin:0 0 6px;font-size:12px;line-height:20px;color:#536577;"><strong>Contact consent:</strong> ${escapeHtml(consent)}</p>
+          ${consentHtml}
           <p style="margin:0 0 20px;font-size:12px;line-height:20px;color:#536577;"><strong>Source:</strong> Website quote form — wilandcopainting.com</p>
         </td></tr>
         <tr><td class="inset" bgcolor="#071d35" style="padding:25px 36px;background-color:#071d35;">
@@ -162,6 +195,7 @@ export function renderContactEmail(
       `Property type: ${data.propertyType}`,
       `Received: ${received} (Madison time)`,
       `Contact consent: ${consent}`,
+      ...consentDetails,
       "Source: Website quote form — wilandcopainting.com",
       "",
       "Project details:",

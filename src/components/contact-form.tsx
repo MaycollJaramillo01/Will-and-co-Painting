@@ -9,6 +9,11 @@ import { services } from "@/content/en";
 import { business } from "@/config/business";
 import { quoteFormConversion } from "@/components/google-ads-tag";
 import { contactSchema, type ContactFormData } from "@/lib/contact-schema";
+import {
+  aiCallConsentText,
+  contactConsentVersion,
+  smsConsentText,
+} from "@/lib/contact-consent";
 
 // "handoff" = it could not be emailed, so the visitor sends it themselves.
 type SubmitState = { status: "idle" | "sent" | "handoff" };
@@ -36,6 +41,9 @@ export function ContactForm() {
       propertyType: "Residential",
       message: "",
       consent: false,
+      smsConsent: false,
+      aiCallConsent: false,
+      consentVersion: contactConsentVersion,
       website: "",
     },
   });
@@ -48,6 +56,12 @@ export function ContactForm() {
         `Email: ${data.email}`,
         `Phone: ${data.phone || "Not provided"}`,
         `Property type: ${data.propertyType}`,
+        `Terms accepted: ${data.consent ? "Yes" : "No"}`,
+        `Automated SMS consent: ${data.smsConsent ? "Yes" : "Not given"}`,
+        `Automated / AI voice call consent: ${data.aiCallConsent ? "Yes" : "Not given"}`,
+        `Consent disclosure version: ${contactConsentVersion}`,
+        ...(data.smsConsent ? [smsConsentText] : []),
+        ...(data.aiCallConsent ? [aiCallConsentText] : []),
         data.message,
       ].join("\n"),
     );
@@ -247,7 +261,7 @@ export function ContactForm() {
         <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-[color:var(--muted)]">
           <input
             type="checkbox"
-            className="mt-1 h-4 w-4 accent-[color:var(--accent)]"
+            className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--accent)]"
             aria-invalid={Boolean(errors.consent)}
             aria-describedby={errors.consent ? "consent-error" : undefined}
             {...register("consent")}
@@ -261,7 +275,7 @@ export function ContactForm() {
             >
               Terms &amp; Conditions
             </Link>{" "}
-            and{" "}
+            and acknowledge the{" "}
             <Link
               href="/privacy-policy"
               target="_blank"
@@ -269,7 +283,8 @@ export function ContactForm() {
             >
               Privacy Policy
             </Link>
-            , and that Wil & Co. Painting may contact me about this request.
+            . {business.businessName} may respond by email or a manually placed
+            phone call about my request.
           </span>
         </label>
         {errors.consent?.message && (
@@ -281,6 +296,47 @@ export function ContactForm() {
           </p>
         )}
       </div>
+
+      <fieldset className="grid gap-4">
+        <legend className="mb-3 text-sm font-extrabold">
+          Optional communication preferences
+        </legend>
+        <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-[color:var(--muted)]">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--accent)]"
+            {...register("smsConsent")}
+          />
+          <span>{smsConsentText}</span>
+        </label>
+        <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-[color:var(--muted)]">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--accent)]"
+            {...register("aiCallConsent")}
+          />
+          <span>{aiCallConsentText}</span>
+        </label>
+        <p className="text-xs leading-5 text-[color:var(--muted)]">
+          These choices apply only to your request and related services. See our{" "}
+          <Link
+            className="font-bold underline"
+            href="/terms#sms-communications"
+            target="_blank"
+          >
+            SMS terms
+          </Link>{" "}
+          and{" "}
+          <Link
+            className="font-bold underline"
+            href="/terms#ai-communications"
+            target="_blank"
+          >
+            automated and AI call terms
+          </Link>
+          .
+        </p>
+      </fieldset>
 
       <button
         className="button-primary w-full sm:w-fit"

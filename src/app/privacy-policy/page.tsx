@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { companyName, LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Privacy Policy"
       description="What information we collect when you visit this website or request a quote, and how we use it."
-      updated="November 3, 2026"
+      updated="November 4, 2026"
     >
       <p>
         {companyName} (&ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your
@@ -28,6 +29,14 @@ export default function PrivacyPolicyPage() {
         type, the service you need, and the project details you write. When you
         call us or message us on WhatsApp, we receive your phone number and
         whatever you choose to tell us.
+      </p>
+      <p>
+        <strong>Communication preferences and consent records.</strong> We also
+        collect your separate choices about automated SMS/text messages and
+        automated or AI voice calls, the phone number those choices apply to,
+        the date and time of submission, and the consent wording and version.
+        Leaving an optional consent checkbox unchecked does not prevent you from
+        requesting a quote.
       </p>
       <p>
         <strong>Information collected automatically.</strong> This website uses
@@ -55,6 +64,26 @@ export default function PrivacyPolicyPage() {
         messages unless you agree to receive them.
       </p>
 
+      <h2>Jobber, automated messaging, and AI</h2>
+      <p>
+        We use Jobber to help manage client information, quote requests,
+        scheduling, and project communications. Where enabled, Jobber and
+        AI-assisted tools may help answer calls or messages, generate replies,
+        and arrange appointments. Information processed for these purposes may
+        include your contact details, project information, message content,
+        communication preferences, and conversation summaries. Any recording or
+        transcription is subject to applicable notice and consent requirements.
+      </p>
+      <p>
+        We use your separate opt-in choices to determine whether we may send
+        automated texts or initiate automated or AI voice calls. Accepting this
+        Privacy Policy or providing a phone number does not by itself grant
+        those permissions. See our{" "}
+        <Link href="/terms#sms-communications">SMS terms</Link> and{" "}
+        <Link href="/terms#ai-communications">automated and AI call terms</Link>
+        . You can ask to speak with our team instead of an AI assistant.
+      </p>
+
       <h2>How we share your information</h2>
       <p>
         We do not sell or rent your personal information. We share it only with
@@ -62,6 +91,10 @@ export default function PrivacyPolicyPage() {
         purposes above:
       </p>
       <ul>
+        <li>
+          Jobber, which helps us manage clients, requests, scheduling, and
+          communications, including automation and AI features where enabled.
+        </li>
         <li>
           Resend, which delivers quote requests from this website to our inbox.
         </li>
@@ -87,8 +120,11 @@ export default function PrivacyPolicyPage() {
       </ul>
       <p>
         We do not share mobile phone numbers or text messaging consent with
-        third parties for their own marketing. We may disclose information when
-        the law requires it or to protect our rights, our customers, or others.
+        third parties or affiliates for their own marketing or promotional
+        purposes. Providers may process this information only as needed to
+        support our communications and business operations. We may disclose
+        information when the law requires it or to protect our rights, our
+        customers, or others.
       </p>
 
       <h2>Cookies and advertising choices</h2>
@@ -126,6 +162,13 @@ export default function PrivacyPolicyPage() {
         correct or delete it, and ask us to stop contacting you at any time. We
         may need to confirm your identity first, and we may keep information
         that the law requires us to keep.
+      </p>
+      <p>
+        To stop text messages, reply STOP. For messaging help, reply HELP or
+        contact us using the details below. You may withdraw automated or AI
+        voice call consent by asking the caller or contacting us. We also honor
+        clear opt-out requests made by other reasonable methods and keep the
+        records needed to respect your preferences.
       </p>
 
       <h2>Children&rsquo;s privacy</h2>

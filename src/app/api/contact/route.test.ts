@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, test } from "node:test";
 import { POST } from "./route.ts";
 import { renderContactEmail } from "../../../lib/contact-email.ts";
+import {
+  aiCallConsentText,
+  contactConsentVersion,
+  smsConsentText,
+} from "../../../lib/contact-consent.ts";
 
 const validRequest = {
   name: "Resend Test",
@@ -59,7 +64,10 @@ test("sends through Resend using server recipients and the customer's reply-to",
       assert.match(payload.html, /New quote request/);
       assert.match(payload.html, /mailto:customer%40example.com/);
       assert.match(payload.html, /logo-white.png/);
-      assert.doesNotMatch(payload.html, /quote-header|New project\.|Let's get to work/);
+      assert.doesNotMatch(
+        payload.html,
+        /quote-header|New project\.|Let's get to work/,
+      );
       assert.match(payload.html, /font-family:'Manrope'/);
       assert.match(payload.html, /font-family:'Barlow Condensed'/);
       assert.deepEqual(
@@ -167,6 +175,49 @@ test("supports disabling the temporary copy", async (t) => {
     },
   );
   assert.equal((await POST(request())).status, 200);
+});
+
+test("delivers separate consent choices and the exact disclosure version with the request", async (t) => {
+  t.mock.method(
+    globalThis,
+    "fetch",
+    async (_url: string | URL | Request, options?: RequestInit) => {
+      const payload = JSON.parse(String(options?.body));
+      assert.match(payload.text, /Automated SMS consent: Granted/);
+      assert.match(payload.text, /AI voice call consent: Not given/);
+      assert.ok(
+        payload.text.includes(
+          `Consent disclosure version: ${contactConsentVersion}`,
+        ),
+      );
+      assert.ok(
+        payload.text.includes(`SMS disclosure shown: ${smsConsentText}`),
+      );
+      assert.ok(
+        payload.text.includes(
+          `AI voice call disclosure shown: ${aiCallConsentText}`,
+        ),
+      );
+      assert.match(
+        payload.text,
+        /Authorized phone number: \+1 \(608\) 555-0147/,
+      );
+      assert.match(payload.text, /Submission recorded at: \d{4}-\d{2}-\d{2}T/);
+      assert.match(payload.html, /Automated SMS consent: Granted/);
+      assert.match(payload.html, /AI voice call consent: Not given/);
+      return Response.json({ id: "test-email-id" });
+    },
+  );
+  const response = await POST(
+    request({
+      ...validRequest,
+      phone: "+1 (608) 555-0147",
+      smsConsent: true,
+      aiCallConsent: false,
+      consentVersion: contactConsentVersion,
+    }),
+  );
+  assert.equal(response.status, 200);
 });
 
 test("rejects invalid JSON and unconsented requests without sending", async (t) => {
