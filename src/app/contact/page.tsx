@@ -29,14 +29,13 @@ export default function ContactPage() {
               <BusinessDetails />
             </div>
           </aside>
-          <div className="rounded-xl bg-[color:var(--surface)] p-6 shadow-[var(--shadow)] sm:p-8 lg:p-10">
+          <div className="min-w-0 rounded-xl bg-[color:var(--surface)] p-6 shadow-[var(--shadow)] sm:p-8 lg:p-10">
             <h2 className="font-display text-4xl font-semibold">
               Request a Quote
             </h2>
             <p className="mt-3 mb-8 max-w-xl text-sm leading-7 text-[color:var(--muted)]">
-              Tell us about your project and review the terms below. Phone is
-              optional unless you choose automated texts or calls. You can
-              request a quote without opting in to either.
+              Tell us about your project using the form below. Your request will
+              be sent directly to Wil &amp; Co. Painting through Jobber.
             </p>
             <ContactForm />
           </div>
