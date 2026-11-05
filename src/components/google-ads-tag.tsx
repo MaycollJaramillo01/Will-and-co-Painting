@@ -11,7 +11,8 @@ const callConversionLabel =
 const websiteCallConversion = `${googleAdsId}/8_N8CIeL0KIdEPeCvKpB`;
 // "Clic de WhatsApp".
 const whatsappConversion = `${googleAdsId}/vE8zCI2L0KIdEPeCvKpB`;
-// "Formulario de cotizacion", fired by the contact form once the request is emailed.
+// "Formulario de cotizacion", fired by the contact form once Jobber confirms
+// the request, with the Jobber request ID as transaction_id.
 export const quoteFormConversion = `${googleAdsId}/YUpWCIqL0KIdEPeCvKpB`;
 
 export function GoogleAdsTag() {

@@ -6,6 +6,7 @@ import { GoogleAdsTag } from "@/components/google-ads-tag";
 import { LocalBusinessSchema } from "@/components/local-business-schema";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { VisitJourney } from "@/components/visit-journey";
 import { WhatsAppBubble } from "@/components/whatsapp-bubble";
 import { business, siteUrl } from "@/config/business";
 import "./globals.css";
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteFooter />
         <CallBubble />
         <WhatsAppBubble />
+        <VisitJourney />
       </body>
     </html>
   );

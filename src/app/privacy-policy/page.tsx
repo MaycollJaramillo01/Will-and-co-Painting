@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Privacy Policy"
       description="What information we collect when you visit this website or request a quote, and how we use it."
-      updated="November 4, 2026"
+      updated="November 5, 2026"
     >
       <p>
         {companyName} (&ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your
@@ -47,6 +47,14 @@ export default function PrivacyPolicyPage() {
         one of our ads may see a Google forwarding phone number; Google then
         reports call details such as the start time, duration, and the
         caller&rsquo;s area code so we can measure our advertising.
+      </p>
+      <p>
+        This website also keeps a short record in your browser of how you
+        arrived (for example, the ad or campaign you clicked), the pages you
+        view, and whether you tap to call, open WhatsApp, or open our request
+        form. If you send a quote request, that record is added to your request
+        in Jobber so we know how you found us. Otherwise it stays in your
+        browser and expires after 30 days of inactivity.
       </p>
 
       <h2>How we use your information</h2>
