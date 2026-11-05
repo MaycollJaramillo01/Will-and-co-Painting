@@ -147,14 +147,26 @@ export async function POST(request: Request) {
         signal: AbortSignal.timeout(10_000),
       },
     );
-    const token = await tokenResponse.json();
-    if (!tokenResponse.ok || typeof token.access_token !== "string") {
+    // A rejected refresh comes back as plain text, not JSON.
+    const tokenText = await tokenResponse.text();
+    let token;
+    try {
+      token = JSON.parse(tokenText);
+    } catch {}
+    if (!tokenResponse.ok || typeof token?.access_token !== "string") {
       console.error(
-        "Jobber token refresh rejected",
+        "Jobber token refresh rejected. If rotation is ON in the Jobber app, turn it OFF and reconnect.",
         tokenResponse.status,
-        token.error_description ?? token.error,
+        token
+          ? (token.error_description ?? token.error)
+          : tokenText.slice(0, 200),
       );
       return Response.json({ requestId: null }, { status: 502 });
+    }
+    if (token.refresh_token && token.refresh_token !== refreshToken) {
+      console.warn(
+        "Jobber rotated the refresh token, so JOBBER_REFRESH_TOKEN just stopped working. Turn rotation OFF in the Jobber app and reconnect.",
+      );
     }
 
     const data = (await jobber(token.access_token, requestsQuery, {
