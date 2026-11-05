@@ -159,9 +159,10 @@ export async function POST(request: Request) {
 
     const data = (await jobber(token.access_token, requestsQuery, {
       filter: {
+        // Iso8601DateTimeRangeInput: both bounds inclusive.
         createdAt: {
-          from: new Date(since - 60_000).toISOString(),
-          to: new Date(now + 60_000).toISOString(),
+          after: new Date(since - 60_000).toISOString(),
+          before: new Date(now + 60_000).toISOString(),
         },
       },
     })) as RecentRequests;

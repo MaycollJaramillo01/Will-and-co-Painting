@@ -27,6 +27,11 @@ function fakeJobber(requests: { id: string; notes: string[] }[]) {
         },
       });
     }
+    // Jobber rejects anything but after/before on Iso8601DateTimeRangeInput.
+    assert.deepEqual(Object.keys(variables.filter.createdAt).sort(), [
+      "after",
+      "before",
+    ]);
     return Response.json({
       data: {
         requests: {
